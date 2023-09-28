@@ -1,10 +1,14 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
+import ch.qos.logback.core.util.LocationUtil;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.parsing.Location;
+
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,8 +20,11 @@ public class Post implements DomainEntity<URI>{
     @OneToOne  // TODO: 28.09.2023 Zkontrolovat zda je to OK
     @JoinColumn(nullable = false)
     private UserAccount author;
+    @Column(nullable = false)
+    private LocalDateTime added;
     @ManyToMany // TODO: 28.09.2023 Zkontrolovat zda je to OK
     private final Set<UserAccount> likes = new HashSet<>();
+    private String text;
 
     public Post() {
     }

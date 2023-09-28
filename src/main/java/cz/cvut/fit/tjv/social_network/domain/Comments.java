@@ -19,4 +19,19 @@ public class Comments implements DomainEntity<CommentsKey> {
     public CommentsKey getID() {
         return null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Comments comments = (Comments) o;
+
+        return key.equals(comments.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return key.hashCode();
+    }
 }

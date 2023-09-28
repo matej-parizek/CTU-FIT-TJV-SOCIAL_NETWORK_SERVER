@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 @Repository
-@Primary
 public interface UserRepository extends CrudRepository<UserAccount,String> {
     @Query("select followed.username from user_account.followed followed where username(followed.username)" +
             "union select followers.username from user_account followers where username(followers.username)")
