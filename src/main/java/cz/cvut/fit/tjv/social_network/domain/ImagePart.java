@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.net.URI;
-@Entity(name = "image")
+//@Entity(name = "image")
 @Getter @Setter
 public class ImagePart extends Post{
     @Column(nullable = false)

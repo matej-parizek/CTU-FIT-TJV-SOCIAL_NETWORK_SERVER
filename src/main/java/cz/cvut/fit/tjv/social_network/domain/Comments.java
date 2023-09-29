@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-//@Entity
+@Entity
 @Setter @Getter
 public class Comments implements DomainEntity<CommentsKey> {
     @EmbeddedId
@@ -16,7 +16,7 @@ public class Comments implements DomainEntity<CommentsKey> {
     @Column(nullable = false)
     private String text;
     @Override
-    public CommentsKey getID() {
+    public CommentsKey getKEY() {
         return null;
     }
 
@@ -33,5 +33,14 @@ public class Comments implements DomainEntity<CommentsKey> {
     @Override
     public int hashCode() {
         return key.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Comments{" +
+                "key=" + key +
+                ", added=" + added +
+                ", text='" + text + '\'' +
+                '}';
     }
 }

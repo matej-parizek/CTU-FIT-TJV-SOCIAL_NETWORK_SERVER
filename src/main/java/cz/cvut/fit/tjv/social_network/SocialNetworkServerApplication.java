@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SocialNetworkServerApplication {
 
     public static void main(String[] args) {
-        UserAccount userAccount = new UserAccount("parizmat");
+        UserAccount userAccount = new UserAccount("parizmat","Sounema-39");
         SpringApplication.run(SocialNetworkServerApplication.class, args);
     }
 

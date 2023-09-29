@@ -1,8 +1,10 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.bind.annotation.Mapping;
 
 import java.io.Serializable;
 
@@ -10,7 +12,9 @@ import java.io.Serializable;
 @Setter @Getter
 public class CommentsKey implements Serializable {
     private Long id;
+    @ManyToOne
     private Post forPost;
+    @ManyToOne
     private UserAccount authorCom;
 
     public CommentsKey(Long id, Post forPost, UserAccount authorCom) {

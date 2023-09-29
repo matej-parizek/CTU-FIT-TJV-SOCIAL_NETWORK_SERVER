@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "post")
+@Entity
 @Getter @Setter
 public class Post implements DomainEntity<URI>{
     @Id
     private URI id;
-    @OneToOne  // TODO: 28.09.2023 Zkontrolovat zda je to OK
+    @ManyToOne  // TODO: 28.09.2023 Zkontrolovat zda je to OK
     @JoinColumn(nullable = false)
     private UserAccount author;
     @Column(nullable = false)
@@ -35,7 +35,7 @@ public class Post implements DomainEntity<URI>{
     }
 
     @Override
-    public URI getID() {
+    public URI getKEY() {
         return null;
     }
 
@@ -52,5 +52,16 @@ public class Post implements DomainEntity<URI>{
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", author=" + author +
+                ", added=" + added +
+                ", likes=" + likes +
+                ", text='" + text + '\'' +
+                '}';
     }
 }
