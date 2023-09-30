@@ -5,19 +5,32 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Setter @Getter
 public class Comments implements DomainEntity<CommentsKey> {
     @EmbeddedId
-    private CommentsKey key;
+    private CommentsKey id;
     @Column(nullable = false)
     private LocalDateTime added;
     @Column(nullable = false)
     private String text;
+
+    public Comments(CommentsKey key) {
+        this.id = Objects.requireNonNull(key);
+    }
+    public Comments(Long id, Post forPost, UserAccount author){
+        this(new CommentsKey(id,forPost,author));
+    }
+
+    public Comments() {
+
+    }
+
     @Override
     public CommentsKey getKEY() {
-        return null;
+        return getId();
     }
 
     @Override
@@ -27,18 +40,18 @@ public class Comments implements DomainEntity<CommentsKey> {
 
         Comments comments = (Comments) o;
 
-        return key.equals(comments.key);
+        return id.equals(comments.id);
     }
 
     @Override
     public int hashCode() {
-        return key.hashCode();
+        return id.hashCode();
     }
 
     @Override
     public String toString() {
         return "Comments{" +
-                "key=" + key +
+                "key=" + id+
                 ", added=" + added +
                 ", text='" + text + '\'' +
                 '}';

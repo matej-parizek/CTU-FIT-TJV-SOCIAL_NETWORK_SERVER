@@ -10,6 +10,7 @@ import org.springframework.beans.factory.parsing.Location;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -30,8 +31,8 @@ public class Post implements DomainEntity<URI>{
     }
 
     public Post(URI id, UserAccount author) {
-        this.id = id;
-        this.author = author;
+        this.id = Objects.requireNonNull(id);
+        this.author = Objects.requireNonNull(author);
     }
 
     @Override

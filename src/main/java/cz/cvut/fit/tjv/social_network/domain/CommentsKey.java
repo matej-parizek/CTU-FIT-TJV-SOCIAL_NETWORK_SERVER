@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.Mapping;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 @Setter @Getter
@@ -18,9 +20,9 @@ public class CommentsKey implements Serializable {
     private UserAccount authorCom;
 
     public CommentsKey(Long id, Post forPost, UserAccount authorCom) {
-        this.id = id;
-        this.forPost = forPost;
-        this.authorCom = authorCom;
+        this.id = Objects.requireNonNull(id);
+        this.forPost = Objects.requireNonNull(forPost);
+        this.authorCom = Objects.requireNonNull(authorCom);
     }
 
     public CommentsKey() {

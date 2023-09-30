@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "User_account")
@@ -33,8 +34,8 @@ public class UserAccount implements DomainEntity<String>{
 
 
     public UserAccount(String username, String password) {
-        this.password=password;
-        this.username=username;
+        this.password= Objects.requireNonNull(password);
+        this.username=Objects.requireNonNull(username);
     }
 
 

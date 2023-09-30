@@ -1,7 +1,6 @@
 package cz.cvut.fit.tjv.social_network.service;
 
 import cz.cvut.fit.tjv.social_network.domain.UserAccount;
-import cz.cvut.fit.tjv.social_network.repository.UserAccountRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +20,10 @@ public class UserAccountService extends AbstractCrudService<UserAccount,String> 
      * @param follower object of {@link UserAccount} user who start follow another user
      * @param followee object of {@link UserAccount} user who had been followed
      */
-//    public void follow(UserAccount follower, UserAccount followee){
-//        followee.addFollowers(follower);
-//        follower.addFollowed(followee);
-//    }
+    public void follow(UserAccount follower, UserAccount followee){
+        followee.addFollowers(follower);
+        follower.addFollowed(followee);
+    }
 
     public long numberOfUsers(){
         return repository.count();
