@@ -1,7 +1,9 @@
 # Semestral work - Server (Social_network)
 
->  Dotaz navíc: Zobrazit všechny prátele. Za přátele se považují uživatelé, kteří se sledují navzájem.   
+> Dotaz navíc: Zobrazení celkového počtu liků, co uživatel získal za Posty
 
+> Koplexní operace: Spoluautorství. Uživatel vytvoří příspěvek a může nastavit dalšího uživatele jako autora, takže se
+vytvoří post u dalšího uživatele.
 
 ## Model:
 
