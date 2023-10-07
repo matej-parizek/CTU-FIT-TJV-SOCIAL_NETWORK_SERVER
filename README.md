@@ -1,8 +1,9 @@
 # Semestral work - Server (Social_network)
 
-> Dotaz navíc: Zobrazit všechny prátele. Za přátele se považují uživatelé, kteří se sledují navzájem.   
+> Dotaz navíc: Zobrazení celkoveho počtu liků co uzivatel získal
 
-> Do Entity User byl přidán atribut password 
+> Koplexní operace: Spolu autorství. Uživatel vytvorí prispevek a muze nastavit dalsiho uzivatele jako autora, takže se
+se vytvoří post u dalsiho uzivatele.
 
 ## Model:
 

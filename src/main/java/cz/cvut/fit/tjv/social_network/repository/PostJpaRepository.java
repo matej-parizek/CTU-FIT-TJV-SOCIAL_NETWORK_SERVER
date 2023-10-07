@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.net.URI;
 
 @EnableJpaRepositories
+
 public interface PostJpaRepository extends JpaRepository<Post, URI> {
 }

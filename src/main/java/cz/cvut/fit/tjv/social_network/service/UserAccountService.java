@@ -21,6 +21,7 @@ public class UserAccountService extends AbstractCrudService<UserAccount,String> 
      * @param followee object of {@link UserAccount} user who had been followed
      */
     public void follow(UserAccount follower, UserAccount followee){
+        UserServiceException.followUser(followee,follower);
         followee.addFollowers(follower);
         follower.addFollowed(followee);
     }

@@ -42,11 +42,12 @@ public class UserAccount implements DomainEntity<String>{
     public UserAccount() {
 
     }
-    public void addFollowers(UserAccount ... users){
-        followers.addAll(Arrays.asList(users));
+    public void addFollowers(UserAccount user){
+        Objects.requireNonNull(user,"User (Follower) cannot be null");
     }
-    public void addFollowed(UserAccount ... users){
-        followed.addAll(Arrays.asList(users));
+    public void addFollowed(UserAccount user){
+        Objects.requireNonNull(user,"User (Followee) cannot be null");
+
     }
     @Override
     public String getKEY() {
