@@ -13,18 +13,6 @@ public class UserAccountService extends AbstractCrudService<UserAccount,String> 
         super(repository);
 
     }
-    // TODO: 29.09.2023 kontrola zda to je spravne
-    /**
-     * User follows another user
-     *
-     * @param follower object of {@link UserAccount} user who start follow another user
-     * @param followee object of {@link UserAccount} user who had been followed
-     */
-    public void follow(UserAccount follower, UserAccount followee){
-        UserServiceException.followUser(followee,follower);
-        followee.addFollowers(follower);
-        follower.addFollowed(followee);
-    }
 
     public long numberOfUsers(){
         return repository.count();

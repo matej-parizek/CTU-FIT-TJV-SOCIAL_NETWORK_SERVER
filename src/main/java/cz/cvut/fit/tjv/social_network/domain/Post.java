@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.parsing.Location;
+import org.springframework.web.bind.annotation.Mapping;
 
 
 import java.net.URI;
@@ -23,7 +24,9 @@ public class Post implements DomainEntity<URI>{
     private UserAccount author;
     @Column(nullable = false)
     private LocalDateTime added;
-    @ManyToMany // TODO: 28.09.2023 Zkontrolovat zda je to OK
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "username")// TODO: 28.09.2023 Zkontrolovat zda je to OK
     private final Set<UserAccount> likes = new HashSet<>();
     private String text;
 

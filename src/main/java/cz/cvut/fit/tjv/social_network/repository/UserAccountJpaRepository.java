@@ -8,11 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.util.Collection;
 @EnableJpaRepositories
 public interface UserAccountJpaRepository extends JpaRepository<UserAccount,String> {
-    /**
-     * Find all friends of user. Friends are users, which follows each other.
-     *
-     * @param username is ID of user, whom looking for friends. Allowed object {@link String}
-     * @return {@link Collection}
-     */
-    Collection<UserAccount> findFriends(String username);
+    @Query("SELECT COUNT(l) FROM Post.likes l WHERE l.username= :username")
+    int countAllLikes(String username);
 }

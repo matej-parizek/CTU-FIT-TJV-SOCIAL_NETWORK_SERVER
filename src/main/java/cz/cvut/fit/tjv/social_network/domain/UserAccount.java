@@ -1,10 +1,7 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,10 +24,14 @@ public class UserAccount implements DomainEntity<String>{
 
 
     // TODO: 28.09.2023 Kontrola zda je to vazba many to many
-    @ManyToMany
+    @ManyToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "username"
+
+    )
     private final Set<UserAccount> followed = new HashSet<>();
-    @ManyToMany
-    private final Set<UserAccount> followers = new HashSet<>();
+
 
 
     public UserAccount(String username, String password) {
@@ -77,7 +78,6 @@ public class UserAccount implements DomainEntity<String>{
                 ", realName='" + realName + '\'' +
                 ", info='" + info + '\'' +
                 ", followed=" + followed +
-                ", followers=" + followers +
                 '}';
     }
 }

@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public interface CommentsJpaRepository extends JpaRepository<Comments, CommentsKey> {
 
     //@EntityGraph ????
+
 }
