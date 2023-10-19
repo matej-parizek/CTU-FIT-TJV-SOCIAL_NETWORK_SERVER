@@ -3,6 +3,7 @@ package cz.cvut.fit.tjv.social_network.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Arrays;
@@ -11,7 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "User_account")
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
 public class UserAccount implements DomainEntity<String>{
     @Id
     private String username;
@@ -23,13 +24,7 @@ public class UserAccount implements DomainEntity<String>{
     private String info;
 
 
-    // TODO: 28.09.2023 Kontrola zda je to vazba many to many
-    @ManyToMany(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            mappedBy = "username"
-
-    )
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "username")
     private final Set<UserAccount> followed = new HashSet<>();
 
 
@@ -39,17 +34,6 @@ public class UserAccount implements DomainEntity<String>{
         this.username=Objects.requireNonNull(username);
     }
 
-
-    public UserAccount() {
-
-    }
-    public void addFollowers(UserAccount user){
-        Objects.requireNonNull(user,"User (Follower) cannot be null");
-    }
-    public void addFollowed(UserAccount user){
-        Objects.requireNonNull(user,"User (Followee) cannot be null");
-
-    }
     @Override
     public String getKEY() {
         return this.getUsername();

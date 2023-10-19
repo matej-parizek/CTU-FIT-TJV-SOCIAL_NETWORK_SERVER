@@ -5,10 +5,11 @@ plugins {
 }
 
 group = 'cz.cvut.fit.tjv'
-version = '0.0.2-SNAPSHOT'
+version = '0.0.4-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
+    targetCompatibility = '17'
 }
 
 repositories {

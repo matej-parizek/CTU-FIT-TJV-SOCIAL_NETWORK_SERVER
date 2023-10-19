@@ -1,46 +1,60 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
-import ch.qos.logback.core.util.LocationUtil;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.parsing.Location;
-import org.springframework.web.bind.annotation.Mapping;
 
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 @Entity
-@Getter @Setter
-public class Post implements DomainEntity<URI>{
+@Getter @Setter @NoArgsConstructor
+// Another opinion key
+/*
+ * @Table(uniqueConstraints = @UniqueConstraint(name = "post_key",columnNames = {"author", "uri"}))
+ */
+public class Post implements DomainEntity<PostKey>{
+
+    @EmbeddedId
+    private PostKey key;
+
+    //Another opinion key;
+    /**
     @Id
-    private URI id;
-    @ManyToOne  // TODO: 28.09.2023 Zkontrolovat zda je to OK
-    @JoinColumn(nullable = false)
+    private Long id;
+    @Column(nullable = false)
+    private URI uri;
+    @ManyToOne(optional = false)
     private UserAccount author;
+     */
+
     @Column(nullable = false)
     private LocalDateTime added;
-    @ManyToMany(
-            fetch = FetchType.LAZY,
-            mappedBy = "username")// TODO: 28.09.2023 Zkontrolovat zda je to OK
-    private final Set<UserAccount> likes = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "username")
+    private final Collection<UserAccount> likes = new HashSet<>();
     private String text;
 
-    public Post() {
+    public Post(PostKey key){
+        this.key=key;
+    }
+    public Post(URI id, UserAccount author) {
+        this(new PostKey(id,author));
     }
 
-    public Post(URI id, UserAccount author) {
-        this.id = Objects.requireNonNull(id);
-        this.author = Objects.requireNonNull(author);
+    public UserAccount getAuthor(){
+        return key.getAuthor();
+    }
+    public URI getUri(){
+        return key.getUri();
     }
 
     @Override
-    public URI getKEY() {
-        return null;
+    public PostKey getKEY() {
+        return key;
     }
 
     @Override
@@ -50,22 +64,13 @@ public class Post implements DomainEntity<URI>{
 
         Post post = (Post) o;
 
-        return id.equals(post.id);
+        return key.equals(post.key);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return key.hashCode();
     }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", author=" + author +
-                ", added=" + added +
-                ", likes=" + likes +
-                ", text='" + text + '\'' +
-                '}';
-    }
+
 }

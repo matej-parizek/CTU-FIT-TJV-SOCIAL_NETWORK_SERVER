@@ -1,6 +1,8 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
-public interface DomainEntity <K> {
+import java.io.Serializable;
+
+public interface DomainEntity <K> extends Serializable {
     K getKEY();
 }
 

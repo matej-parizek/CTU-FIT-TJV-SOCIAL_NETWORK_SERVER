@@ -1,4 +1,4 @@
-package cz.cvut.fit.tjv.social_network.service;
+package cz.cvut.fit.tjv.social_network.service.exceptions;
 
 import cz.cvut.fit.tjv.social_network.domain.UserAccount;
 

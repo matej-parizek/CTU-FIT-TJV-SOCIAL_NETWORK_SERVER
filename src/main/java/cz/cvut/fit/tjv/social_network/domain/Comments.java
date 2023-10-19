@@ -2,16 +2,30 @@ package cz.cvut.fit.tjv.social_network.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Setter @Getter
+@Setter @Getter @NoArgsConstructor
+/*
+  @Table(uniqueConstraints = @UniqueConstraint(name = "comments_key", columnNames = {""}))
+ */
 public class Comments implements DomainEntity<CommentsKey> {
     @EmbeddedId
     private CommentsKey id;
+
+    // Another opinion for id
+    /**
+     @Id
+     private Long key;
+     @ManyToOne(optional = false)
+     private UserAccount author;
+     @ManyToOne(optional = false)
+     private Post toPost;
+     */
     @Column(nullable = false)
     private LocalDateTime added;
     @Column(nullable = false)
@@ -24,9 +38,6 @@ public class Comments implements DomainEntity<CommentsKey> {
         this(new CommentsKey(id,forPost,author));
     }
 
-    public Comments() {
-
-    }
 
     @Override
     public CommentsKey getKEY() {

@@ -1,32 +1,28 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-@Setter @Getter
+@Setter @Getter @NoArgsConstructor
 public class CommentsKey implements Serializable {
-    private Long id;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Post forPost;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private UserAccount authorCom;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     public CommentsKey(Long id, Post forPost, UserAccount authorCom) {
         this.id = Objects.requireNonNull(id);
         this.forPost = Objects.requireNonNull(forPost);
         this.authorCom = Objects.requireNonNull(authorCom);
-    }
-
-    public CommentsKey() {
-
     }
 
     @Override
