@@ -40,4 +40,12 @@ public class PostKey implements Serializable {
         result = 31 * result + uri.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "PostKey{" +
+                "author=" + author +
+                ", uri=" + uri +
+                '}';
+    }
 }

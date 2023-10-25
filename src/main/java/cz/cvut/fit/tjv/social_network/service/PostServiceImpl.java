@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -58,7 +59,7 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
             // TODO: 24.10.2023
             throw new RuntimeException();
         var post = optPost.get();
-        var newPost = new Post(post.getKey().getUri(),userCoAuthor);
+        var newPost = new Post(post.getKey().getUri(),userCoAuthor); newPost.setAdded(LocalDateTime.now());
         newPost.setText(post.getText()+ "\n Author: "+author+"\n Co-Author: "+coAuthor+"\n");
         postRepository.save(newPost);
     }
@@ -85,8 +86,4 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
         postRepository.save(post);
     }
 
-    @Override
-    public Collection<Post> findAll() {
-        return postRepository.findAll();
-    }
 }

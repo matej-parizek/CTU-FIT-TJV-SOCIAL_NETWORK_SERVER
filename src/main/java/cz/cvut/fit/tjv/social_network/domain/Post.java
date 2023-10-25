@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.regex.PatternSyntaxException;
@@ -23,7 +24,11 @@ public class Post implements DomainEntities<PostKey>{
 
     @EmbeddedId
     private PostKey key;
+    @Column(nullable = false)
+    private LocalDateTime added;
     private String text;
+
+
     @ManyToMany(mappedBy = "liked", fetch = FetchType.EAGER)
     private final Collection<User>likes = new HashSet<>();
 
@@ -54,5 +59,15 @@ public class Post implements DomainEntities<PostKey>{
     @Override
     public PostKey getId() {
         return key;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "key=" + key +
+                ", added=" + added +
+                ", text='" + text + '\'' +
+                ", likes=" + likes +
+                '}';
     }
 }

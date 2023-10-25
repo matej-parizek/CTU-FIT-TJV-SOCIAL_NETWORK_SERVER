@@ -49,4 +49,16 @@ public class User implements DomainEntities<String>{
     public String getId() {
         return username;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", realName='" + realName + '\'' +
+                ", info='" + info + '\'' +
+                ", followed=" + followed +
+                ", liked=" + liked +
+                '}';
+    }
 }
