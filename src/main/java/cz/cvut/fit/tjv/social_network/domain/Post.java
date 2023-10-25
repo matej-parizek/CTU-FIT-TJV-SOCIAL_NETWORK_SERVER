@@ -5,57 +5,36 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.regex.PatternSyntaxException;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
-// Another opinion key
-/*
- * @Table(uniqueConstraints = @UniqueConstraint(name = "post_key",columnNames = {"author", "uri"}))
- */
-public class Post implements DomainEntity<PostKey>{
+@Setter @Getter @NoArgsConstructor
+public class Post implements DomainEntities<PostKey>{
+
+//    @Id
+//    private Long id;
+//    private URI uri;
+//    @ManyToOne(optional = false)
+//    private User author;
+
 
     @EmbeddedId
     private PostKey key;
-
-    //Another opinion key;
-    /**
-    @Id
-    private Long id;
-    @Column(nullable = false)
-    private URI uri;
-    @ManyToOne(optional = false)
-    private UserAccount author;
-     */
-
-    @Column(nullable = false)
-    private LocalDateTime added;
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "username")
-    private final Collection<UserAccount> likes = new HashSet<>();
     private String text;
+    @ManyToMany(mappedBy = "liked", fetch = FetchType.EAGER)
+    private final Collection<User>likes = new HashSet<>();
 
-    public Post(PostKey key){
-        this.key=key;
-    }
-    public Post(URI id, UserAccount author) {
-        this(new PostKey(id,author));
-    }
-
-    public UserAccount getAuthor(){
-        return key.getAuthor();
-    }
-    public URI getUri(){
-        return key.getUri();
+    public Post(PostKey key) {
+        this.key = key;
     }
 
-    @Override
-    public PostKey getKEY() {
-        return key;
+    public Post( URI uri, User author) {
+       this(new PostKey(author, uri));
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -72,5 +51,8 @@ public class Post implements DomainEntity<PostKey>{
         return key.hashCode();
     }
 
-
+    @Override
+    public PostKey getId() {
+        return key;
+    }
 }

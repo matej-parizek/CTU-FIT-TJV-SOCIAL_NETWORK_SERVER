@@ -8,3 +8,9 @@ se vytvoří post u dalsiho uzivatele (Pouze pratele).
 ## Model:
 
 <img src="resources_readme/img.png" alt="Model">
+
+
+plugins:
+
+    id 'org.springframework.boot' version '3.1.4'
+    id 'io.spring.dependency-management' version '1.1.3'

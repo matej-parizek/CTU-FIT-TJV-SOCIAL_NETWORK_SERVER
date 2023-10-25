@@ -1,17 +1,14 @@
 package cz.cvut.fit.tjv.social_network.service;
 
-import cz.cvut.fit.tjv.social_network.domain.DomainEntity;
+import cz.cvut.fit.tjv.social_network.domain.DomainEntities;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public abstract class AbstractCrudServiceImpl<E extends DomainEntity<K>,K> implements CrudService< E, K>{
-    public final JpaRepository<E,K> repository;
+public abstract class AbstractCrudServiceImpl<E extends DomainEntities<K>,K> implements CrudService< E, K>{
 
-    protected AbstractCrudServiceImpl(JpaRepository<E, K> repository) {
-        this.repository = repository;
-    }
 
     /**
      * Create new entity in repository
@@ -21,10 +18,10 @@ public abstract class AbstractCrudServiceImpl<E extends DomainEntity<K>,K> imple
      */
     @Override
     public E create(E entity){
-        K id = Objects.requireNonNull(entity.getKEY(), "Id (Key) for create entity cannot be null");
-        if(repository.existsById(id))
+        K id = Objects.requireNonNull(entity.getId(), "Id (Key) for create entity cannot be null");
+        if(getRepository().existsById(id))
             throw new RuntimeException();
-        return repository.save(entity);
+        return getRepository().save(entity);
     }
 
     /**
@@ -34,10 +31,10 @@ public abstract class AbstractCrudServiceImpl<E extends DomainEntity<K>,K> imple
      */
     @Override
     public void deleteById(E entity){
-        K id = Objects.requireNonNull(entity.getKEY(), "Id (Key) for delete entity cannot be null");
-        if(!repository.existsById(id))
+        K id = Objects.requireNonNull(entity.getId(), "Id (Key) for delete entity cannot be null");
+        if(!getRepository().existsById(id))
             throw new RuntimeException();
-        repository.deleteById(id);
+        getRepository().deleteById(id);
     }
 
     /**
@@ -47,13 +44,10 @@ public abstract class AbstractCrudServiceImpl<E extends DomainEntity<K>,K> imple
      */
     @Override
     public Optional<E> readById(K id){
-        return repository.findById(id);
+        return getRepository().findById(id);
     }
     @Override
     public abstract void update(E entity);
 
-    @Override
-    public JpaRepository<E, K> getRepository() {
-        return repository;
-    }
+    protected abstract JpaRepository<E, K> getRepository();
 }

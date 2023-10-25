@@ -11,5 +11,4 @@ public interface CrudService<E, K> {
     Optional<E> readById(K id);
     void update(E entity);
 
-    JpaRepository<E,K> getRepository();
 }
