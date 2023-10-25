@@ -1,9 +1,10 @@
 # Semestral work - Server (Social_network)
 
-> Dotaz navíc: Zobrazení celkového počtu liků ze všech příspěvků, co uživatel získal 
+> Dotaz navíc: Počet všech liků co uživatel získal, za všechny své příspěvky. 
 
-> Koplexní operace: Spoluautorství. Uživatel vytvoří příspěvek a může nastavit dalšího uživatele jako autora, takže se
-vytvoří post u dalšího uživatele. Vytvoření spoluautorsví může být pouze uživateli kteří se sledují navzájem.
+> Koplexní operace: Spoluautorství. Uživatel vytvoří příspěvek a může nastavit dalšího uživatele jako spoluautora, takže 
+> se vytvoří post i u dalšího uživatele s přidaným textem k příspěvku. Podmínka pro vytvoření spolu autora je že se 
+> uživatelé sledují navzájem 
 
 ## Model:
 
