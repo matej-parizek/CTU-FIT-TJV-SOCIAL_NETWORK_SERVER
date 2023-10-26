@@ -9,8 +9,23 @@ se vytvoří post u dalsiho uzivatele (Pouze pratele).
 
 <img src="resources_readme/img.png" alt="Model">
 
+zkouseni bez client:
 
-plugins:
+vget
 
-    id 'org.springframework.boot' version '3.1.4'
-    id 'io.spring.dependency-management' version '1.1.3'
+curl
+
+HTTP client -- intel idea 
+priklad requestu:
+POST /api/v1/user/HTTP/1.1
+Host: piskvorky.jobs.cz
+Contntent-Type: application/jason
+
+{
+    "nicname": "string",
+    "email": "String"
+}
+
+
+dokumentace: openapi
+(swagger editor)
