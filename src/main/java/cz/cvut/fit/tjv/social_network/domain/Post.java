@@ -9,18 +9,12 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
 @Entity
 @Setter @Getter @NoArgsConstructor
 public class Post implements DomainEntities<PostKey>{
-
-//    @Id
-//    private Long id;
-//    private URI uri;
-//    @ManyToOne(optional = false)
-//    private User author;
-
 
     @EmbeddedId
     private PostKey key;
@@ -28,18 +22,18 @@ public class Post implements DomainEntities<PostKey>{
     private LocalDateTime added;
     private String text;
 
+    private byte[] image;
 
-    @ManyToMany(mappedBy = "liked", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private final Collection<User>likes = new HashSet<>();
 
     public Post(PostKey key) {
         this.key = key;
     }
 
-    public Post( URI uri, User author) {
-       this(new PostKey(author, uri));
+    public Post( Long id, User author) {
+       this(new PostKey(author, id));
     }
-
 
     @Override
     public boolean equals(Object o) {

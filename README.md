@@ -1,10 +1,14 @@
 # Semestral work - Server (Social_network)
 
-> Dotaz navíc: Zobrazení celkoveho počtu liků co uzivatel získal
+> Dotaz navíc: Pocitej vsechny like u prispevku kde se nastavil jako spoluautor. (V textu bude nastaven spoluauthor: username)
 
-> Koplexní operace: Spolu autorství. Uživatel vytvorí prispevek a muze nastavit dalsiho uzivatele jako autora, takže se
-se vytvoří post u dalsiho uzivatele (Pouze pratele).
+> Koplexní operace: Spoluautorství. Uživatel vytvoří příspěvek a může nastavit dalšího uživatele jako spoluautora, takže
+> se vytvoří post i u dalšího uživatele s přidaným textem k příspěvku. Podmínka pro vytvoření spolu autora je, že se
+> uživatelé sledují navzájem.
 
+## Model:
+
+<img src="re
 ## Model:
 
 <img src="resources_readme/img.png" alt="Model">
@@ -29,3 +33,4 @@ Contntent-Type: application/jason
 
 dokumentace: openapi
 (swagger editor)
+http://localhost:8080/swagger-ui/index.html

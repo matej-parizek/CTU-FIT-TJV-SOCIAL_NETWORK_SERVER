@@ -2,13 +2,11 @@ package cz.cvut.fit.tjv.social_network.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.net.URI;
 
 @Embeddable
 @NoArgsConstructor @Getter
@@ -16,11 +14,11 @@ public class PostKey implements Serializable {
     @ManyToOne(targetEntity = User.class, optional = false)
     private User author;
     @Column(nullable = false)
-    private URI uri;
+    private Long id;
 
-    public PostKey(User author, URI uri) {
+    public PostKey(User author, Long id) {
         this.author = author;
-        this.uri = uri;
+        this.id = id;
     }
 
     @Override
@@ -31,13 +29,13 @@ public class PostKey implements Serializable {
         PostKey postKey = (PostKey) o;
 
         if (!author.equals(postKey.author)) return false;
-        return uri.equals(postKey.uri);
+        return id.equals(postKey.id);
     }
 
     @Override
     public int hashCode() {
         int result = author.hashCode();
-        result = 31 * result + uri.hashCode();
+        result = 31 * result + id.hashCode();
         return result;
     }
 
@@ -45,7 +43,7 @@ public class PostKey implements Serializable {
     public String toString() {
         return "PostKey{" +
                 "author=" + author +
-                ", uri=" + uri +
+                ", uri=" + id +
                 '}';
     }
 }

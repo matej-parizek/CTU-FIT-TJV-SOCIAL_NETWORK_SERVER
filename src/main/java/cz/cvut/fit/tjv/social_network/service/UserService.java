@@ -13,5 +13,7 @@ public interface UserService extends CrudService<User,String> {
 
    void follow(String follower, String followed);
    Collection<User> findFriends(String username);
+   Collection<User> getFollowers(String username);
+   Collection<User> getFollowed(String username);
 
 }

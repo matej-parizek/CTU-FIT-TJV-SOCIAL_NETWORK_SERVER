@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter @Getter @NoArgsConstructor
 public class Comment implements DomainEntities<Long>{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idComment;
+    private long idComment;
     @ManyToOne(optional = false)
     private User author;
     @ManyToOne(optional = false)
@@ -48,12 +47,12 @@ public class Comment implements DomainEntities<Long>{
 
         Comment comment = (Comment) o;
 
-        return idComment.equals(comment.idComment);
+        return comment.idComment == this.idComment;
     }
 
     @Override
     public int hashCode() {
-        return idComment.hashCode();
+        return Long.valueOf(idComment).hashCode();
     }
 
     @Override

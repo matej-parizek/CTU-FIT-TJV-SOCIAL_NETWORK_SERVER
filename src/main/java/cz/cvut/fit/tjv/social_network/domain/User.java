@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.bind.annotation.Mapping;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,21 +14,19 @@ import java.util.HashSet;
 public class User implements DomainEntities<String>{
     @Id
     private String username;
-    @Column(nullable = false)
-    private String password;
     private String realName;
     private String info;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private final Collection<User> followed = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private final Collection<Post> liked=new HashSet<>();
+    @ManyToMany(mappedBy = "followed", fetch = FetchType.EAGER)
+    private final Collection<User> followers = new HashSet<>();
 
 
-    public User(String username, String password) {
+
+    public User(String username) {
         this.username = username;
-        this.password = password;
     }
 
     @Override
@@ -54,11 +53,9 @@ public class User implements DomainEntities<String>{
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", realName='" + realName + '\'' +
                 ", info='" + info + '\'' +
                 ", followed=" + followed +
-                ", liked=" + liked +
                 '}';
     }
 }

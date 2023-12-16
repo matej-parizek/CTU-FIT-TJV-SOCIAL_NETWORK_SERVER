@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface CrudService<E, K> {
     E create(E entity);
-    void deleteById(E entity);
+    void deleteById(K entity);
     Optional<E> readById(K id);
-    void update(E entity);
+    E update(E entity);
 
 }

@@ -15,12 +15,12 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,String> {
-@Query("SELECT sum(size(p.likes) ) FROM Post p where :username=p.key.author.username")
-long sumAllLikes(@Param("username") String username);
+    @Query("SELECT sum(size(p.likes) ) FROM Post p where :username=p.key.author.username")
+    long sumAllLikes(@Param("username") String username);
 
-@Query("select author.followed from User_account author where :username=author.username" +
+    @Query("select author.followed from User_account author where :username=author.username" +
         " intersect " +
         "select u from User_account u where :username in (select f.username from u.followed f)")
-Collection<User> findFriends(@Param("username") String username);
+    Collection<User> findFriends(@Param("username") String username);
 
 }
