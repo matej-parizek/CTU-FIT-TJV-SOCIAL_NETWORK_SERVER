@@ -60,7 +60,7 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
         }
         var post = optPost.get();
         var newPost = new Post(post.getKey().getId(),userCoAuthor); newPost.setAdded(LocalDateTime.now());
-        newPost.setText(post.getText()+ "\n Author: "+author+"\n Co-Author: "+coAuthor+"\n");
+        newPost.setText(post.getText()+ "\nAuthor: "+author+"\nCo-Author: "+coAuthor);
         postRepository.save(newPost);
     }
 

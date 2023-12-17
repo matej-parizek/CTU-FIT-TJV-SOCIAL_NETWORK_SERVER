@@ -1,5 +1,9 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +21,12 @@ public class User implements DomainEntities<String>{
     private String realName;
     private String info;
 
+    @JsonIgnoreProperties({"followed", "followers"})
     @ManyToMany(fetch = FetchType.EAGER)
     private final Collection<User> followed = new HashSet<>();
 
-    @ManyToMany(mappedBy = "followed", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"followed", "followers"})
+    @ManyToMany(fetch = FetchType.EAGER)
     private final Collection<User> followers = new HashSet<>();
 
 
