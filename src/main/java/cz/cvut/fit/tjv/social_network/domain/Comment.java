@@ -1,5 +1,6 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,10 @@ import lombok.Setter;
 public class Comment implements DomainEntities<Long>{
     @Id
     private long idComment;
+    @JsonIgnoreProperties({"followed","followers","info"})
     @ManyToOne(optional = false)
     private User author;
+    @JsonIgnoreProperties({"image","added","text"})
     @ManyToOne(optional = false)
     private Post toPost;
     @Column(nullable = false)

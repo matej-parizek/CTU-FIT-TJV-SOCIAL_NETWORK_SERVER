@@ -2,8 +2,11 @@ package cz.cvut.fit.tjv.social_network.service;
 
 import cz.cvut.fit.tjv.social_network.domain.Post;
 import cz.cvut.fit.tjv.social_network.domain.PostKey;
+import cz.cvut.fit.tjv.social_network.domain.User;
 import cz.cvut.fit.tjv.social_network.repository.PostRepository;
 import cz.cvut.fit.tjv.social_network.repository.UserRepository;
+import cz.cvut.fit.tjv.social_network.service.exceptions.EntityAlreadyExistException;
+import cz.cvut.fit.tjv.social_network.service.exceptions.post.LikeDoesntExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.post.PostDoesNotExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UserDoestExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UsersAreNotFriendsException;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -26,7 +30,15 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
         this.postRepository = repository;
         this.userRepository = userRepository;
     }
-
+    @Override
+    public Post create(Post entity){
+        PostKey id = Objects.requireNonNull(entity.getId(), "Id (Key) for create entity cannot be null");
+        var authorOpt = userRepository.findById(entity.getKey().getAuthor().getUsername());
+        if(authorOpt.isEmpty())
+            throw new UserDoestExistException();
+        entity.getKey().setAuthor(authorOpt.get());
+        return super.create(entity);
+    }
     @Override
     public Post update(Post entity) {
         /// TODO: 20.10.2023
@@ -65,19 +77,35 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
     }
 
     @Override
-    public void like(String who, long uri, String author) {
+    public void like(String who, long id, String author) {
         var optUserWho = userRepository.findById(who);
         var optUserAuthor = userRepository.findById(author);
         if(optUserWho.isEmpty() || optUserAuthor.isEmpty())
             throw new UserDoestExistException();
         var userWho = optUserWho.get();
         var userAuthor = optUserAuthor.get();
-        var optPost = postRepository.findById(new PostKey(userAuthor,uri));
+        var optPost = postRepository.findById(new PostKey(userAuthor,id));
         if(optPost.isEmpty())
             throw new PostDoesNotExistException();
         var post = optPost.get();
 
         post.getLikes().add(userWho);
+        postRepository.save(post);
+    }
+    @Override
+    public void unlike(String who, long id, String author ){
+        var optUserWho = userRepository.findById(who);
+        var optUserAuthor = userRepository.findById(author);
+        if(optUserWho.isEmpty() || optUserAuthor.isEmpty())
+            throw new UserDoestExistException();
+        var userWho = optUserWho.get();
+        var userAuthor = optUserAuthor.get();
+        var optPost = postRepository.findById(new PostKey(userAuthor,id));
+        if(optPost.isEmpty())
+            throw new PostDoesNotExistException();
+        var post = optPost.get();
+        if(!post.getLikes().remove(userWho))
+            throw new LikeDoesntExistException();
         postRepository.save(post);
     }
 
@@ -99,5 +127,21 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
         if(post.isEmpty())
             throw new PostDoesNotExistException();
         return post;
+    }
+
+    @Override
+    public Collection<User> likes(String username, long id) {
+        var postOpt = readById(username,id);
+        if(postOpt.isEmpty())
+            throw new PostDoesNotExistException();
+        return postOpt.get().getLikes();
+    }
+
+    @Override
+    public void deleteById(String username, long id){
+        var optPost = readById(username,id);
+        if (optPost.isEmpty())
+            throw new PostDoesNotExistException();
+        postRepository.deleteById(optPost.get().getKey());
     }
 }

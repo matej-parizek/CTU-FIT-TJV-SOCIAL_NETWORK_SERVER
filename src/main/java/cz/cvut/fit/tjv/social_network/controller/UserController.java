@@ -2,18 +2,25 @@ package cz.cvut.fit.tjv.social_network.controller;
 
 import cz.cvut.fit.tjv.social_network.domain.User;
 import cz.cvut.fit.tjv.social_network.service.UserService;
+import cz.cvut.fit.tjv.social_network.service.exceptions.EntityAlreadyExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.EntityDoesNotExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UserDoesntFollowException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UserDoestExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UsersAreSameException;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
-
 @RestController
-@RequestMapping(value = "/user")
+@ApiResponses({
+        @ApiResponse(responseCode = "404", description = "User does not exist", content = @Content),
+        @ApiResponse(responseCode = "200")
+
+})
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
@@ -22,8 +29,10 @@ public class UserController {
     }
 
     @PostMapping
+    @ApiResponses( {
+        @ApiResponse(responseCode = "409", description = "Attempt to create existing user", content = @Content),
+    })
     public User create(@RequestBody User data) {
-        //TODO
         // 500 problem serveru
         // 400 request spatně
 
@@ -31,16 +40,18 @@ public class UserController {
         // Osetreni controllerAdvice nebo rucne
         try {
             return userService.create(data);
-        } catch (IllegalArgumentException e) {
+        } catch (EntityAlreadyExistException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
 
     //TODO
-    @PutMapping
-    public User update(@RequestBody User data) {
+    @PutMapping("/{username}")
+    public User update(@RequestBody User user, @PathVariable String username) {
         try {
-            return userService.update(data);
+            if(!username.equals(user.getUsername()))
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            return userService.update(user);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
@@ -48,33 +59,35 @@ public class UserController {
 
     @DeleteMapping("/{username}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Optional<String> username) {
-        if (username.isEmpty())
-            throw new ResponseStatusException(HttpStatus.GONE);
+    @ApiResponses({
+    })
+    public void delete(@PathVariable String username) {
         try {
-            userService.deleteById(username.get());
+            userService.deleteById(username);
         } catch (EntityDoesNotExistException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/{username}/follow")
-    public void follow(@PathVariable Optional<String> username, @RequestParam Optional<String> follow){
-        if(username.isEmpty() || follow.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+    @ApiResponses({
+            @ApiResponse(responseCode = "409", description = "User cannot follow himself", content = @Content)
+    })
+    public void follow(@PathVariable String username, @RequestParam String follow){
         try {
-            userService.follow(username.get(), follow.get());
+            userService.follow(username, follow);
         }catch (UserDoestExistException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }catch (UsersAreSameException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
-    @PutMapping("/{username}/unfollow")
-    public void unfollow(@PathVariable Optional<String> username, @RequestParam Optional<String> unfollow){
-        if(username.isEmpty() || unfollow.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+    @DeleteMapping("/{username}/follow")
+    @ApiResponses({
+            @ApiResponse(responseCode = "409", description = "User cannot follow himself", content = @Content)
+    })
+    public void unfollow(@PathVariable String username, @RequestParam String follow){
         try {
-            userService.unfollow(username.get(), unfollow.get());
+            userService.unfollow(username, follow);
         }catch (UserDoestExistException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }catch (UsersAreSameException | UserDoesntFollowException e){
@@ -83,72 +96,65 @@ public class UserController {
 
     }
     @GetMapping("/{username}")
-    public User getUser(@PathVariable Optional<String> username){
-        if (username.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        var userOpt = userService.readById(username.get());
+    @ApiResponses({
+            
+    })
+    public User getUser(@PathVariable String username){
+        var userOpt = userService.readById(username);
         if(userOpt.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return userOpt.get();
     }
     @GetMapping("/{username}/followers")
-    public Iterable<User> getFollowers(@PathVariable Optional<String> username){
-        if(username.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-
+    @ApiResponses({
+            
+    })
+    public Iterable<User> getFollowers(@PathVariable String username){
         try {
-            return userService.getFollowers(username.get());
+            return userService.getFollowers(username);
         }catch (UserDoestExistException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
     }
-    @GetMapping("/{username}/followed")
-    public Iterable<User> getFollowed(@PathVariable Optional<String> username){
-        if(username.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+    @GetMapping("/{username}/follow")
+    @ApiResponses({
+    })
+    public Iterable<User> getFollowed(@PathVariable  String username){
         try {
-            return userService.getFollowed(username.get());
+            return userService.getFollowed(username);
         }catch (UserDoestExistException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("/{username}/co-creator-likes")
-    public long coCreatorLikes(@PathVariable Optional<String> username){
-        if(username.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+    @GetMapping("/{username}/sum-co-creator-likes")
+    @ApiResponses({})
+    public long coCreatorLikes(@PathVariable String username){
         try {
-            return userService.sumLikesLikeCoWorker(username.get());
+            return userService.sumLikesLikeCoWorker(username);
         }catch (UserDoestExistException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("/{username}/all-likes")
-    public long allLikes(@PathVariable Optional<String> username){
+
+    @GetMapping("/{username}/sum-post-likes")
+    @ApiResponses({
+            
+    })    
+    public long postLikes(@PathVariable String username){
         if(username.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
         try {
-            return userService.sumAllLikes(username.get());
-        }catch (UserDoestExistException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-    @GetMapping("/{username}/post-likes")
-    public long postLikes(@PathVariable Optional<String> username){
-        if(username.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        try {
-            return userService.sumAllPostLikes(username.get());
+            return userService.sumAllPostLikes(username);
         }catch (UserDoestExistException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
     @GetMapping("/{username}/friends")
-    public Iterable<User> getFriends(@PathVariable Optional<String> username){
-        if(username.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+    @ApiResponses({})
+    public Iterable<User> getFriends(@PathVariable String username){
         try{
-            return userService.findFriends(username.get());
+            return userService.findFriends(username);
         }catch (UserDoestExistException e ){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

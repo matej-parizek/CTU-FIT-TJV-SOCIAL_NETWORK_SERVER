@@ -32,12 +32,10 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
         // TODO: 20.10.2023
         throw new RuntimeException();
     }
-
     @Override
     protected JpaRepository<User, String> getRepository() {
         return userRepository;
     }
-
     @Override
     public Collection<User> findFriends(String username) {
         var userOpt = userRepository.findById(username);
@@ -46,7 +44,6 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
         var user = userOpt.get();
         return user.getFollowed().stream().distinct().filter(user.getFollowed()::contains).collect(Collectors.toSet());
     }
-
     @Override
     public void follow(String follower, String followed) {
         var followerOpt = userRepository.findById(follower);
@@ -86,18 +83,12 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
             throw new UserDoestExistException();
         return userOpt.get().getFollowers();
     }
+    @Override
     public Collection<User> getFollowed(String username) {
         var userOpt = userRepository.findById(username);
         if(userOpt.isEmpty())
             throw new UserDoestExistException();
         return userOpt.get().getFollowed();
-    }
-
-    @Override
-    public long sumAllLikes(String username) {
-        if(userRepository.findById(username).isEmpty())
-            throw new UserDoestExistException();
-        return userRepository.sumAllLikesLikeCoCreator(username) + userRepository.sumAllPostLikes(username);
     }
     @Override
     public long sumAllPostLikes(String username) {
@@ -105,7 +96,6 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
             throw new UserDoestExistException();
         return userRepository.sumAllPostLikes(username);
     }
-
     @Override
     public long sumLikesLikeCoWorker(String username) {
         if(userRepository.findById(username).isEmpty())

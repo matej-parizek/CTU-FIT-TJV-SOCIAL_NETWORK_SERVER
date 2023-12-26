@@ -29,8 +29,6 @@ public class User implements DomainEntities<String>{
     @ManyToMany(fetch = FetchType.EAGER)
     private final Collection<User> followers = new HashSet<>();
 
-
-
     public User(String username) {
         this.username = username;
     }

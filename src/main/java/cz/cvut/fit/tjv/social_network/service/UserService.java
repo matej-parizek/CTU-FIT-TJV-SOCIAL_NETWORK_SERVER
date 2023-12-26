@@ -5,7 +5,7 @@ import cz.cvut.fit.tjv.social_network.domain.User;
 import java.util.Collection;
 
 public interface UserService extends CrudService<User,String> {
-   long sumAllLikes(String username);
+
    long sumAllPostLikes(String username);
    long sumLikesLikeCoWorker(String username);
    void follow(String follower, String followed);

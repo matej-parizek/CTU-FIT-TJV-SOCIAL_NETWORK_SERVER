@@ -1,5 +1,7 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +25,8 @@ public class Post implements DomainEntities<PostKey>{
     private String text;
 
     private byte[] image;
-
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"followed","followers","info"})
     private final Collection<User>likes = new HashSet<>();
 
     public Post(PostKey key) {
