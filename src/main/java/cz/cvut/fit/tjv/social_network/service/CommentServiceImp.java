@@ -26,7 +26,7 @@ public class CommentServiceImp extends AbstractCrudServiceImpl<Comment, Long> im
 
     @Override
     public Comment update(Comment entity) {
-        throw new RuntimeException();
+        return commentRepository.save(entity);
     }
 
     @Override

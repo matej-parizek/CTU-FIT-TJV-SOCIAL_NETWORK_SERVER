@@ -29,8 +29,13 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
 
     @Override
     public User update(User entity) {
-        // TODO: 20.10.2023
-        throw new RuntimeException();
+        var userOpt = readById(entity.getId());
+        if(userOpt.isEmpty())
+            throw new UserDoestExistException();
+        var user = userOpt.get();
+        user.setInfo(entity.getInfo());
+        user.setRealName(entity.getRealName());
+        return userRepository.save(user);
     }
     @Override
     protected JpaRepository<User, String> getRepository() {
@@ -42,7 +47,7 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
         if(userOpt.isEmpty())
             throw new UserDoestExistException();
         var user = userOpt.get();
-        return user.getFollowed().stream().distinct().filter(user.getFollowed()::contains).collect(Collectors.toSet());
+        return user.getFollowed().stream().distinct().filter(user.getFollowers()::contains).collect(Collectors.toSet());
     }
     @Override
     public void follow(String follower, String followed) {
@@ -52,6 +57,13 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
             throw new UserDoestExistException();
         var followerUser = followerOpt.get();
         var followedUser = followedOpt.get();
+
+        if(followedUser.getFollowers().contains(followerUser) || followerUser.getFollowed().contains(followedUser)){
+            userRepository.save(followedUser);
+            userRepository.save(followerUser);
+            return;
+        }
+
         if(followedUser.equals(followerUser))
             throw new UsersAreSameException();
         followerUser.getFollowed().add(followedUser);
@@ -107,5 +119,10 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
         if(postRepository.findAllByKeyAuthor(userOpt.get()).isEmpty())
             return 0;
         return userRepository.sumAllLikesLikeCoCreator(username);
+    }
+
+    @Override
+    public Collection<User> getAll() {
+        return userRepository.findAll();
     }
 }

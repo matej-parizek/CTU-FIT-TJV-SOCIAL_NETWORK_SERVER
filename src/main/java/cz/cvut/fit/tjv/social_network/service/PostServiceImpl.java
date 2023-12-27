@@ -41,8 +41,7 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
     }
     @Override
     public Post update(Post entity) {
-        /// TODO: 20.10.2023
-        throw new RuntimeException();
+        return postRepository.save(entity);
     }
 
     @Override

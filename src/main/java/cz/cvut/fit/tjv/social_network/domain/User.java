@@ -22,14 +22,14 @@ public class User implements DomainEntities<String>{
     private String info;
 
     @JsonIgnoreProperties({"followed", "followers"})
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private final Collection<User> followed = new HashSet<>();
 
     @JsonIgnoreProperties({"followed", "followers"})
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private final Collection<User> followers = new HashSet<>();
 
-    public User(String username) {
+        public User(String username) {
         this.username = username;
     }
 

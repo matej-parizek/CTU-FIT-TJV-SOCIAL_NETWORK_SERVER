@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collection;
+
 @RestController
 @ApiResponses({
         @ApiResponse(responseCode = "404", description = "User does not exist", content = @Content),
@@ -43,6 +45,10 @@ public class UserController {
         } catch (EntityAlreadyExistException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
+    }
+    @GetMapping
+    public Collection<User> getAll(){
+        return userService.getAll();
     }
 
     //TODO
