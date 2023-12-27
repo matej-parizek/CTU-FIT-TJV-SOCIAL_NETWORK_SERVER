@@ -25,7 +25,7 @@ public class Post implements DomainEntities<PostKey>{
     private String text;
 
     private byte[] image;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"followed","followers","info"})
     private final Collection<User>likes = new HashSet<>();
 

@@ -92,14 +92,20 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
     }
     @Override
     public long sumAllPostLikes(String username) {
-        if(userRepository.findById(username).isEmpty())
+        var userOpt = userRepository.findById(username);
+        if(userOpt.isEmpty())
             throw new UserDoestExistException();
+        if(postRepository.findAllByKeyAuthor(userOpt.get()).isEmpty())
+            return 0;
         return userRepository.sumAllPostLikes(username);
     }
     @Override
     public long sumLikesLikeCoWorker(String username) {
-        if(userRepository.findById(username).isEmpty())
+        var userOpt = userRepository.findById(username);
+        if(userOpt.isEmpty())
             throw new UserDoestExistException();
+        if(postRepository.findAllByKeyAuthor(userOpt.get()).isEmpty())
+            return 0;
         return userRepository.sumAllLikesLikeCoCreator(username);
     }
 }
