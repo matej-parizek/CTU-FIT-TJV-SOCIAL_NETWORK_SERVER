@@ -5,7 +5,6 @@ import cz.cvut.fit.tjv.social_network.domain.PostKey;
 import cz.cvut.fit.tjv.social_network.domain.User;
 import cz.cvut.fit.tjv.social_network.repository.PostRepository;
 import cz.cvut.fit.tjv.social_network.repository.UserRepository;
-import cz.cvut.fit.tjv.social_network.service.exceptions.EntityAlreadyExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.post.LikeDoesntExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.post.PostDoesNotExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UserDoestExistException;
@@ -14,14 +13,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> implements PostService{
-    PostRepository postRepository;
-    UserRepository userRepository;
+    final private PostRepository postRepository;
+
+    final private UserRepository userRepository;
 //    public PostServiceImpl(PostRepository repository) {
 //        this.repository = repository;
 //    }
@@ -32,7 +30,6 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
     }
     @Override
     public Post create(Post entity){
-        PostKey id = Objects.requireNonNull(entity.getId(), "Id (Key) for create entity cannot be null");
         var authorOpt = userRepository.findById(entity.getKey().getAuthor().getUsername());
         if(authorOpt.isEmpty())
             throw new UserDoestExistException();
@@ -52,26 +49,32 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
     @Override
     public void coCreator(String author, long id, String coAuthor) {
         var optUserAuthor = userRepository.findById(author);
-        var optUserCoAuthor = userRepository.findById(coAuthor);
-        if(optUserCoAuthor.isEmpty() || optUserAuthor.isEmpty())
-        {
+        if( optUserAuthor.isEmpty()){
             throw new UserDoestExistException();
         }
         var userAuthor = optUserAuthor.get();
-        var userCoAuthor = optUserCoAuthor.get();
-
         // Check friends
-        if(!userRepository.findFriends(author).contains(userCoAuthor) || userCoAuthor.equals(userAuthor)) {
+        List<User> friends = new ArrayList<>(userAuthor.getFollowed());
+        friends.retainAll(userAuthor.getFollowers());
+        var coAuthorUserOpt = userAuthor.getFollowed().stream()
+                .filter(user -> user.getUsername().equals(coAuthor))
+                .findFirst();
+        if(friends.isEmpty() ||coAuthorUserOpt.isEmpty()) {
             throw new UsersAreNotFriendsException();
         }
+        var userCoAuthor = coAuthorUserOpt.get();
         var optPost = postRepository.findById(new PostKey(userAuthor,id));
         if(optPost.isEmpty())
         {
             throw new PostDoesNotExistException();
         }
         var post = optPost.get();
-        var newPost = new Post(post.getKey().getId(),userCoAuthor); newPost.setAdded(LocalDateTime.now());
-        newPost.setText(post.getText()+ "\nAuthor: "+author+"\nCo-Author: "+coAuthor);
+        long newId = this.readAllPostByAuthor(coAuthor).size();
+        var newPost = new Post(newId,userCoAuthor); newPost.setAdded(LocalDateTime.now());
+        String text = post.getText();
+        if(text==null)
+            text="";
+        newPost.setText(text+ "\nAuthor: "+author+"\nCo-Author: "+coAuthor);
         postRepository.save(newPost);
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +35,7 @@ public class PostKey implements Serializable {
         PostKey postKey = (PostKey) o;
 
         if (!author.equals(postKey.author)) return false;
-        return id.equals(postKey.id);
+        return postKey.id.equals(getId());
     }
 
     @Override

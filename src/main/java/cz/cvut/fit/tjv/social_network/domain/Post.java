@@ -23,9 +23,10 @@ public class Post implements DomainEntities<PostKey>{
     @Column(nullable = false)
     private LocalDateTime added;
     private String text;
-
+    @Column(nullable = false)
+    @Lob
     private byte[] image;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"followed","followers","info"})
     private final Collection<User>likes = new HashSet<>();
 

@@ -11,10 +11,7 @@ import java.util.Collection;
 @Repository
 public interface UserRepository extends JpaRepository<User,String> {
     @Query("SELECT sum(size(p.likes) ) FROM Post p where :username=p.key.author.username")
-    long sumAllPostLikes(@Param("username") String username);
-    @Query("select sum(size(p.likes) ) from Post p where p.text= ('%Author: ' + p.key.author.username + CHAR(10) +'Co-Author: '+ :username) ")
-    long sumAllLikesLikeCoCreator(@Param("username") String username);
-    @Query("select u from User_account u where :username=u.username and u.followed in " +
-            "(select us.followers from User_account us where us.username=:username)")
-    Collection<User> findFriends(@Param("username") String username);
+    Long sumAllPostLikes(@Param("username") String username);
+    @Query("SELECT SUM(size(p.likes)) FROM Post p WHERE p.text IS NOT NULL AND p.text = CONCAT('%Author: ', p.key.author.username, CHAR(10), 'Co-Author: ', :username)")
+    Long sumAllLikesLikeCoCreator(@Param("username") String username);
 }

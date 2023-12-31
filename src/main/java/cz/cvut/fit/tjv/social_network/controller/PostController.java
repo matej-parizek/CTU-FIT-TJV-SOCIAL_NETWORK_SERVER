@@ -28,6 +28,16 @@ public class PostController {
         }
 
     }
+    @PostMapping("/{id}/co-create")
+    public void coCreate(@PathVariable String author,@PathVariable long id, @RequestParam String coAuthor){
+        try {
+            //TODO: udelat kdyz by Post.author != author
+            postService.coCreator(author,id,coAuthor);
+        }catch (IllegalAccessError e){ // TODO: 15.12.2023
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
+    //TODO
     @PutMapping("/{id}/likes")
     public void likePost(@PathVariable String author,@PathVariable long id, @RequestParam String like){
         try {
@@ -71,8 +81,6 @@ public class PostController {
         throw new ResponseStatusException(HttpStatus.CONFLICT);
        }
     }
-
-    //TODO
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String author, @PathVariable long id) {

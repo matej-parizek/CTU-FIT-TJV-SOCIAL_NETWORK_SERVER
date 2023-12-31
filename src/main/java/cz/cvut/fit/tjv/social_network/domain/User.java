@@ -1,35 +1,33 @@
 package cz.cvut.fit.tjv.social_network.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.Mapping;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 @Entity(name = "User_account")
-@Getter @Setter @NoArgsConstructor
-public class User implements DomainEntities<String>{
+@Getter
+@Setter
+@NoArgsConstructor
+public class User implements DomainEntities<String> {
     @Id
     private String username;
     private String realName;
     private String info;
 
     @JsonIgnoreProperties({"followed", "followers"})
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private final Collection<User> followed = new HashSet<>();
 
     @JsonIgnoreProperties({"followed", "followers"})
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "followed", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private final Collection<User> followers = new HashSet<>();
 
-        public User(String username) {
+    public User(String username) {
         this.username = username;
     }
 
@@ -55,11 +53,41 @@ public class User implements DomainEntities<String>{
 
     @Override
     public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", realName='" + realName + '\'' +
-                ", info='" + info + '\'' +
-                ", followed=" + followed +
-                '}';
+        return toStringWithDepth(0);
+    }
+
+    private String toStringWithDepth(int depth) {
+        if (depth > 1) {
+            return "Max depth reached";
+        }
+
+        StringBuilder result = new StringBuilder();
+        result.append("User{username='").append(username).append('\'');
+        result.append(", realName='").append(realName).append('\'');
+        result.append(", info='").append(info).append('\'');
+
+        result.append(", followed=[");
+        boolean firstFollowed = true;
+        for (User followedUser : followed) {
+            if (!firstFollowed) {
+                result.append(", ");
+            }
+            result.append(followedUser.toStringWithDepth(depth + 1));
+            firstFollowed = false;
+        }
+        result.append("]");
+
+        result.append(", followers=[");
+        boolean firstFollowers = true;
+        for (User follower : followers) {
+            if (!firstFollowers) {
+                result.append(", ");
+            }
+            result.append(follower.toStringWithDepth(depth + 1));
+            firstFollowers = false;
+        }
+        result.append("]}");
+
+        return result.toString();
     }
 }
