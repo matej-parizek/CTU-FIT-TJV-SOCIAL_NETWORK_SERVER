@@ -32,6 +32,12 @@ public class User implements DomainEntities<String> {
         this.username = username;
     }
 
+    public User(String username, String realName, String info) {
+        this.username = username;
+        this.realName = realName;
+        this.info = info;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
