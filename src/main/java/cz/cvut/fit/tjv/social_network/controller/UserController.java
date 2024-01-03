@@ -36,11 +36,6 @@ public class UserController {
         @ApiResponse(responseCode = "409", description = "Attempt to create existing user", content = @Content),
     })
     public User create(@RequestBody User data) {
-        // 500 problem serveru
-        // 400 request spatně
-
-        // Zjisteni v logu a je tam exception
-        // Osetreni controllerAdvice nebo rucne
         try {
             return userService.create(data);
         } catch (EntityAlreadyExistException e) {

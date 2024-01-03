@@ -1,0 +1,17 @@
+stages:
+  - build
+  - test
+
+build-gradle:
+  stage: build;
+  image: eclipse-temurin:17-alpine
+  script:
+    - ./gradlew build
+
+testing:
+  stage: test
+  only:
+    - testing
+  image: eclipse-temurin:17-alpine
+  script:
+    - ./gradlew test

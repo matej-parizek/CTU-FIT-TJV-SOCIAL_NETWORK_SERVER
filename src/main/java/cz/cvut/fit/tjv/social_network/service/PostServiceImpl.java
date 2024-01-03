@@ -118,7 +118,7 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
     public Collection<Post> readAllPostByAuthor(String author) {
         var authorOfPosts = userRepository.findById(author);
         if(authorOfPosts.isEmpty())
-            throw new UsersAreNotFriendsException();
+            throw new UserDoestExistException();
         return postRepository.findAllByKeyAuthor(authorOfPosts.get());
     }
 

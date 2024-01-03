@@ -8,8 +8,6 @@ import cz.cvut.fit.tjv.social_network.service.exceptions.user.UserDoestExistExce
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UsersAreSameException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
