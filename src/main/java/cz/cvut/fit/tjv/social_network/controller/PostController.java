@@ -6,6 +6,7 @@ import cz.cvut.fit.tjv.social_network.service.PostService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
@@ -43,7 +44,8 @@ public class PostController {
         try {
             postService.like(like,id,author);
             //todo errors
-        }catch (Exception ignored){}
+        }catch (Exception e){
+        }
     }
     @DeleteMapping("/{id}/likes")
     public void unlikePost(@PathVariable String author,@PathVariable long id, @RequestParam String like){
@@ -85,5 +87,13 @@ public class PostController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String author, @PathVariable long id) {
         postService.deleteById(author,id);
+    }
+    @GetMapping("/followed")
+    public Collection<Post> followedPosts(@PathVariable String author){
+        try{
+            return postService.getAllFollowedPosts(author);
+        }catch (IllegalAccessError e){
+            throw new HttpClientErrorException(HttpStatus.CONFLICT);
+        }
     }
 }

@@ -14,5 +14,6 @@ public interface PostService extends CrudService<Post, PostKey>{
     Collection<Post> readAllPostByAuthor(String author);
     Optional<Post> readById(String username, long id);
     Collection<User> likes(String username, long id);
-    public void deleteById(String username, long id);
+    void deleteById(String username, long id);
+    Collection<Post> getAllFollowedPosts(String username);
 }

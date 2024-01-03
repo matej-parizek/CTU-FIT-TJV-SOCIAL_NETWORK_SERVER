@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -25,10 +26,10 @@ public class Post implements DomainEntities<PostKey>{
     private String text;
     @Column(nullable = false)
     @Lob
-    private byte[] image;
+    private String image;
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"followed","followers","info"})
-    private final Collection<User>likes = new HashSet<>();
+    private final Set<User>likes = new HashSet<>();
 
     public Post(PostKey key) {
         this.key = key;

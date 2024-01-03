@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "User_account")
 @Getter
@@ -21,11 +22,11 @@ public class User implements DomainEntities<String> {
 
     @JsonIgnoreProperties({"followed", "followers"})
     @ManyToMany(fetch = FetchType.EAGER)
-    private final Collection<User> followed = new HashSet<>();
+    private final Set<User> followed = new HashSet<>();
 
     @JsonIgnoreProperties({"followed", "followers"})
     @ManyToMany(mappedBy = "followed", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private final Collection<User> followers = new HashSet<>();
+    private final Set<User> followers = new HashSet<>();
 
     public User(String username) {
         this.username = username;

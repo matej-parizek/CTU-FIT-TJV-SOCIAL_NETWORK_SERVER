@@ -70,12 +70,15 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
         }
         var post = optPost.get();
         long newId = this.readAllPostByAuthor(coAuthor).size();
-        var newPost = new Post(newId,userCoAuthor); newPost.setAdded(LocalDateTime.now());
+        var newPost = new Post(newId,userCoAuthor); newPost.setAdded(LocalDateTime.now());newPost.setImage(post.getImage());
         String text = post.getText();
         if(text==null)
             text="";
+        post.setText(text+ "\nAuthor: "+author+"\nCo-Author: "+coAuthor);
         newPost.setText(text+ "\nAuthor: "+author+"\nCo-Author: "+coAuthor);
-        postRepository.save(newPost);
+        getRepository().save(newPost);
+        getRepository().save(post);
+//        postRepository.save(newPost);
     }
 
     @Override
@@ -145,5 +148,13 @@ public class PostServiceImpl extends AbstractCrudServiceImpl<Post, PostKey> impl
         if (optPost.isEmpty())
             throw new PostDoesNotExistException();
         postRepository.deleteById(optPost.get().getKey());
+    }
+
+    @Override
+    public Collection<Post> getAllFollowedPosts(String username) {
+        var posts =  postRepository.findAllFollowedPosts(username);
+        if(posts==null)
+            return new ArrayList<>();
+        return posts;
     }
 }
