@@ -1,14 +1,21 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.4'
+    id 'org.springframework.boot' version '3.1.5'
     id 'io.spring.dependency-management' version '1.1.3'
 }
 
-group = 'cz.cvut.fit.tjv'
-version = '0.0.2-SNAPSHOT'
+group = 'cz.cvut.fit.tjv.social_network'
+version = '0.0.4-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
@@ -16,19 +23,16 @@ repositories {
 }
 
 dependencies {
-
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-jersey'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'com.h2database:h2'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-
-    //Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
-    testCompileOnly 'org.projectlombok:lombok:1.18.30'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+//    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
