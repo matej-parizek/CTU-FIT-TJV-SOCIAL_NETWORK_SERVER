@@ -1,5 +1,6 @@
 stages:
     - build
+    - test
     
 build:
     stage: build
@@ -10,3 +11,10 @@ build:
     script: 
         - chmod +x ./gradlew
         - ./gradlew build
+
+test:
+    stage: test
+    image: eclipse-temurin:17-alpine
+    script: 
+        - chmod +x ./gradlew
+        - ./gradlew test
