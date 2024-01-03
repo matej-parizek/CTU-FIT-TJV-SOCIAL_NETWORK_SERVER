@@ -7,4 +7,6 @@ build:
         - java-syntax
         - DI-manual-no-Gradle
     image: eclipse-temurin:17-alpine
-    script: ./gradlew build
+    script: 
+        - chmod +x ./gradlew
+        - ./gradlew build
