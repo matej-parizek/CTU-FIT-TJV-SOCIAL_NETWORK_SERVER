@@ -1,17 +1,23 @@
+image: gradle:7.4.2-jdk17
 stages:
-  - build
   - test
+  - build
+cache:
+  paths:
+    - .gradle/caches
+    - .gradle/wrapper
 
-build-gradle:
+build:
   stage: build
-  image: eclipse-temurin:17-alpine
   script:
-    - ./gradlew build
+    - ./gradlew clean build
+  artifacts:
+    paths:
+      - build/libs/*.jar
 
-testing:
+test:
   stage: test
   only:
-    - testing
-  image: eclipse-temurin:17-alpine
+    - test
   script:
-    - ./gradlew test
+    - ./gradlew clean test
