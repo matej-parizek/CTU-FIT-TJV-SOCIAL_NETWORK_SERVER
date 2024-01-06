@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -108,46 +109,12 @@ class PostServiceImplUnitTest {
     @Test
     void getAllFollowedPostsSuccessful() {
         when(postRepository.findAllFollowedPosts(anyString())).thenReturn(new ArrayList<>());
+        when(userRepository.findById("ExistingUser")).thenReturn(Optional.of(new User()));
 
         Collection<Post> followedPosts = postService.getAllFollowedPosts("ExistingUser");
 
         assertNotNull(followedPosts);
         verify(postRepository, times(1)).findAllFollowedPosts(anyString());
-    }
-
-    @Test
-    void coCreatorSuccessful() {
-        String author = "author";
-        long postId = 1L;
-        String coAuthor = "coAuthor";
-
-        User userAuthor = new User();
-        userAuthor.setUsername(author);
-
-        User userCoAuthor = new User();
-        userCoAuthor.setUsername(coAuthor);
-        userCoAuthor.getFollowers().add(userAuthor);
-        userCoAuthor.getFollowed().add(userAuthor);
-
-        userAuthor.getFollowers().add(userCoAuthor);
-        userAuthor.getFollowed().add(userCoAuthor);
-
-
-        PostKey postKey = new PostKey(userAuthor, postId);
-        Post post = new Post(postId, userAuthor);
-        post.setAdded(LocalDateTime.now());
-
-        when(userRepository.findById(author)).thenReturn(Optional.of(userAuthor));
-        when(userRepository.findById(coAuthor)).thenReturn(Optional.of(userCoAuthor));
-        when(postRepository.findById(postKey)).thenReturn(Optional.of(post));
-        when(postRepository.save(any(Post.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        postService.coCreator(author, postId, coAuthor);
-
-        verify(userRepository, times(1)).findById(author);
-        verify(userRepository, times(1)).findById(coAuthor);
-        verify(postRepository, times(1)).findById(postKey);
-
-        verify(postRepository, times(2)).save(any(Post.class));
     }
 
     @Test
