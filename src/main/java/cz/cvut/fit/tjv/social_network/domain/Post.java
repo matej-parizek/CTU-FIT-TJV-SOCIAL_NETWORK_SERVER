@@ -24,6 +24,7 @@ import java.util.regex.PatternSyntaxException;
 public class Post implements DomainEntities<PostKey>{
 
     @EmbeddedId
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private PostKey key;
     @Column(nullable = false)
     private LocalDateTime added;

@@ -2,9 +2,12 @@ version: '3.7'
 services:
   postgres:
     image: postgres
+
     environment:
       - 'POSTGRES_DB=tjv'
       - 'POSTGRES_USER=admin'
       - 'POSTGRES_PASSWORD=secret'
     ports:
       - '5432:5432'
+    volumes:
+      - ./src/main/resources/scripts:/docker-entrypoint-initdb.d
