@@ -3,6 +3,8 @@ package cz.cvut.fit.tjv.social_network.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +18,9 @@ import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
 @Entity
-@Setter @Getter @NoArgsConstructor
+@Setter
+@Getter
+@NoArgsConstructor
 public class Post implements DomainEntities<PostKey>{
 
     @EmbeddedId
@@ -24,8 +28,8 @@ public class Post implements DomainEntities<PostKey>{
     @Column(nullable = false)
     private LocalDateTime added;
     private String text;
-    @Column(nullable = false)
     @Lob
+    @Column(name = "image", nullable = false)
     private String image;
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"followed","followers","info"})

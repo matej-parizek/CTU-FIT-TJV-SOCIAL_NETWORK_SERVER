@@ -1,11 +1,14 @@
 package cz.cvut.fit.tjv.social_network.service;
 
 import cz.cvut.fit.tjv.social_network.domain.User;
+import cz.cvut.fit.tjv.social_network.repository.AuthorizationRepository;
+import cz.cvut.fit.tjv.social_network.repository.CommentRepository;
 import cz.cvut.fit.tjv.social_network.repository.PostRepository;
 import cz.cvut.fit.tjv.social_network.repository.UserRepository;
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UserDoesntFollowException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UserDoestExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.user.UsersAreSameException;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import java.util.Collection;
@@ -14,15 +17,15 @@ import java.util.stream.Collectors;
 @Component
 public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>implements UserService{
     UserRepository userRepository;
-   PostRepository postRepository;
+    PostRepository postRepository;
+    AuthorizationRepository authorizationRepository;
+    CommentRepository commentRepository;
 
-//    protected UserServiceImpl(UserRepository repository) {
-//        this.repository=repository;
-//    }
-
-    public UserServiceImpl(UserRepository userRepository, PostRepository postRepository) {
+    public UserServiceImpl(UserRepository userRepository, PostRepository postRepository, AuthorizationRepository authorizationRepository, CommentRepository commentRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.authorizationRepository = authorizationRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -105,8 +108,6 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
         var userOpt = userRepository.findById(username);
         if(userOpt.isEmpty())
             throw new UserDoestExistException();
-        if(postRepository.findAllByKeyAuthor(userOpt.get()).isEmpty())
-            return 0;
         var sum = userRepository.sumAllPostLikes(username);
         if(sum==null)
             return 0;
@@ -117,8 +118,8 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
         var userOpt = userRepository.findById(username);
         if(userOpt.isEmpty())
             throw new UserDoestExistException();
-        if(postRepository.findAllByKeyAuthor(userOpt.get()).isEmpty())
-            return 0;
+//        if(postRepository.findAllByKeyAuthor(userOpt.get()).isEmpty())
+//            return 0;
          var sum = userRepository.sumAllLikesLikeCoCreator(username);
          if(sum==null)
              return 0;
@@ -128,5 +129,35 @@ public class UserServiceImpl extends AbstractCrudServiceImpl<User,String>impleme
     @Override
     public Collection<User> getAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(String id){
+        var userOpt = userRepository.findById(id);
+        if(userOpt.isEmpty())
+            throw new UserDoestExistException();
+        var posts = postRepository.findAllByKeyAuthor(userOpt.get());
+        for (var post: posts){
+            var comments = commentRepository.findCommentByToPost(post);
+            for(var comment: comments){
+                commentRepository.deleteById(comment.getIdComment());
+            }
+            postRepository.deleteById(post.getKey());
+        }
+        var usersFollowedOrFollowers = userRepository.findAllByUserInFollowedOrFollowers(userOpt.get().getUsername());
+
+        for (var u : usersFollowedOrFollowers){
+            u.getFollowers().remove(userOpt.get());
+            u.getFollowed().remove(userOpt.get());
+            userRepository.save(u);
+        }
+        var allLikedPostByUser = postRepository.findAllPostLikedByUsername(userOpt.get().getUsername());
+        for(var like: allLikedPostByUser){
+            like.getLikes().remove(userOpt.get());
+            postRepository.save(like);
+        }
+
+        userRepository.deleteById(userOpt.get().getUsername());
     }
 }

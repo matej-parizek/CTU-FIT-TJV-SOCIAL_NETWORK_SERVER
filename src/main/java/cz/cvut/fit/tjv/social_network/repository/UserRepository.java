@@ -17,4 +17,9 @@ public interface UserRepository extends JpaRepository<User,String> {
     @Query("SELECT SUM(size(p.likes))FROM Post p where p.text like concat('%Author: ',p.key.author.username,CHAR(10)" +
             ",'Co-Author: ', :username ,'%') ")
     Long sumAllLikesLikeCoCreator(@Param("username") String username);
+
+    @Query("SELECT u FROM User_account u WHERE u.username = :username " +
+            "OR u IN (SELECT f FROM User_account f WHERE f.username = :username)")
+    Collection<User> findAllByUserInFollowedOrFollowers(@Param("username") String username);
+
 }

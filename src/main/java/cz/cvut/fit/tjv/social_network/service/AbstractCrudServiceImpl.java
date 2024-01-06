@@ -3,6 +3,7 @@ package cz.cvut.fit.tjv.social_network.service;
 import cz.cvut.fit.tjv.social_network.domain.DomainEntities;
 import cz.cvut.fit.tjv.social_network.service.exceptions.EntityAlreadyExistException;
 import cz.cvut.fit.tjv.social_network.service.exceptions.EntityDoesNotExistException;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Objects;
@@ -31,6 +32,7 @@ public abstract class AbstractCrudServiceImpl<E extends DomainEntities<K>,K> imp
      * @param id Allowed object is {@link K}
      */
     @Override
+    @Transactional
     public void deleteById( K id){
         if(!getRepository().existsById(id))
             throw new EntityDoesNotExistException();

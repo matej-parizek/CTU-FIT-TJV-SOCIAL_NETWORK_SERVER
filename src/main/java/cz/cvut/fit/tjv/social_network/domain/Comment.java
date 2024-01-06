@@ -10,11 +10,12 @@ import lombok.Setter;
 @Setter @Getter @NoArgsConstructor
 public class Comment implements DomainEntities<Long>{
     @Id
-    private long idComment;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long idComment;
     @JsonIgnoreProperties({"followed","followers","info"})
     @ManyToOne(optional = false)
     private User author;
-    @JsonIgnoreProperties({"image","added","text"})
+    @JsonIgnoreProperties({"image","added","text","likes"})
     @ManyToOne(optional = false)
     private Post toPost;
     @Column(nullable = false)
@@ -39,8 +40,13 @@ public class Comment implements DomainEntities<Long>{
     }
 
     @Override
-    public Long getId() {
-        return idComment;
+    public String toString() {
+        return "Comment{" +
+                "idComment=" + idComment +
+                ", author=" + author +
+                ", toPost=" + toPost +
+                ", text='" + text + '\'' +
+                '}';
     }
 
     @Override
@@ -50,21 +56,16 @@ public class Comment implements DomainEntities<Long>{
 
         Comment comment = (Comment) o;
 
-        return comment.idComment == this.idComment;
+        return idComment.equals(comment.idComment);
     }
 
     @Override
     public int hashCode() {
-        return Long.valueOf(idComment).hashCode();
+        return idComment.hashCode();
     }
 
     @Override
-    public String toString() {
-        return "Comment{" +
-                "idComment=" + idComment +
-                ", author=" + author +
-                ", toPost=" + toPost +
-                ", text='" + text + '\'' +
-                '}';
+    public Long getId() {
+        return idComment;
     }
 }
