@@ -49,7 +49,7 @@
 
 ```
     docker-compose up -d
-    # nahrani dat do dockeru pro insert-script
+    # nahrani dat do dockeru pro insert-script (kvůli obrázkům)
     docker cp ./src/main/resources/images/img1 social_network_server-postgres-1:/docker-entrypoint-initdb.d/
     docker cp ./src/main/resources/images/img2 social_network_server-postgres-1:/docker-entrypoint-initdb.d/
     docker cp ./src/main/resources/images/img3 social_network_server-postgres-1:/docker-entrypoint-initdb.d/

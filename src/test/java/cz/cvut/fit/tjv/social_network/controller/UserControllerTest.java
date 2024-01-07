@@ -41,5 +41,32 @@ class UserControllerTest {
                 MockMvcResultMatchers.jsonPath("$.username", Matchers.is("username"))
         );
     }
+    @Test
+    public void createUserAlreadyExist() throws Exception {
+        User user = new User("username", "realName","anyText");
+        mockMvc.perform(
+                MockMvcRequestBuilders
+                        .post("/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"username\"," +
+                                " \"realName\": \"realName\"," +
+                                "\"info\": \"anyText\"}")
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.username", Matchers.is("username"))
+        );
+
+        mockMvc.perform(
+                MockMvcRequestBuilders
+                        .post("/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"username\"," +
+                                " \"realName\": \"realName\"," +
+                                "\"info\": \"anyText\"}")
+        ).andExpect(
+                MockMvcResultMatchers.status().isConflict()
+        );
+    }
 
 }

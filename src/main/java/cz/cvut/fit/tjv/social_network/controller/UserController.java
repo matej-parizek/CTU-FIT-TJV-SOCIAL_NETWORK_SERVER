@@ -20,7 +20,7 @@ import java.util.Collection;
 
 @RestController
 @ApiResponses({
-        @ApiResponse(responseCode = "404", description = "User does not exist", content = @Content),
+        @ApiResponse(responseCode = "404", description = "User cannot be found, user probably does not exist!", content = @Content),
         @ApiResponse(responseCode = "200")
 
 })
