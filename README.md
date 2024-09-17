@@ -1,26 +1,22 @@
-# Semestral work - Server (Social_network):
+# Semestral Work - Server (Social Network)
 
-> Dotaz navíc: Pocitej vsechny like u prispevku kde se nastavil jako spoluautor. (V textu bude nastaven spoluauthor: username)
+## Overview
 
-> Koplexní operace: Spoluautorství. Uživatel vytvoří příspěvek a může nastavit dalšího uživatele jako spoluautora, takže
-> se vytvoří post i u dalšího uživatele s přidaným textem k příspěvku. Podmínka pro vytvoření spolu autora je, že se
-> uživatelé sledují navzájem.
+This project involves a server for a social network application, featuring functionalities for managing user posts, including complex operations such as co-authorship. Users can create posts and set other users as co-authors. When a post is created with a co-author, the post is also created for the co-author with added text. The condition for setting a co-author is that the users must follow each other.
+
+**Additional Query**: Calculate the total number of likes for posts where the user is set as a co-author. (The text will include "coauthor: username".)
 
 <img src="resources.readme/schema.png" alt="schema" width="600px" height="auto">
 
----
+## Server Information
 
-## Informace k serveru:
+This server is designed for a social network application and uses Docker for data management. The database is configured in `application.properties` with `create-drop`, meaning data will be deleted after each restart. Authorization is implemented but only at the server-client level; it is not secure, which is sufficient for the application's intended functionality.
 
-> Jedná se o server k sociální síti, s dockerem pro ukádaní dat, které se následně smažou protože databáze je v application.properties nastavená na create-drop.
-> Je i zde udělané Authorizace ale pouze v rámci server-client, není to bezpečné, pro účely správného pracování aplikace to stačí
----
+## REST API Documentation
 
-## REST API dokumentace
+- **API Documentation**: [Swagger UI](http://localhost:8090/swagger-ui/index.html#/)
 
-### Celková API dokumentace zde: http://localhost:8090/swagger-ui/index.html#/
-
-### Rychlý přehled:
+### Quick Overview:
 
 <img src="resources.readme/apiUser.png" alt="api-user" width="1000px">
 
@@ -30,44 +26,48 @@
 
 <img src="resources.readme/apiAuthorization.png" alt="api-authorization" width="1000px">
 
----
-## Spuštění aplikace:
-    
-### Potřebné aplikace:
+## Running the Application
 
-- API: https://gitlab.fit.cvut.cz/parizmat/social_network_server
+### Required Applications
 
-- Client: https://gitlab.fit.cvut.cz/parizmat/social_network_client 
+- **API Repository**: [Social Network Server](https://gitlab.fit.cvut.cz/parizmat/social_network_server)
+- **Client Repository**: [Social Network Client](https://gitlab.fit.cvut.cz/parizmat/social_network_client)
 
-### Požadavky:
+### Requirements
 
 - JVM
 - Gradle
 - Docker
 
-### Spuštení API:
+### Starting the API
 
-```
+1. Start Docker containers:
+    ```bash
     docker-compose up -d
-    # nahrani dat do dockeru pro insert-script (kvůli obrázkům)
+    ```
+
+2. Load images into Docker for the insert script (for images):
+    ```bash
     docker cp ./src/main/resources/images/img1 social_network_server-postgres-1:/docker-entrypoint-initdb.d/
     docker cp ./src/main/resources/images/img2 social_network_server-postgres-1:/docker-entrypoint-initdb.d/
     docker cp ./src/main/resources/images/img3 social_network_server-postgres-1:/docker-entrypoint-initdb.d/
     docker cp ./src/main/resources/images/img4 social_network_server-postgres-1:/docker-entrypoint-initdb.d/
     docker cp ./src/main/resources/images/img5 social_network_server-postgres-1:/docker-entrypoint-initdb.d/
-```
+    ```
 
-```
+3. Run the application:
+    ```bash
     ./gradlew bootRun
-```
+    ```
 
-### Spuštění Client:
+### Running the Client
 
-```
+1. Start the client application:
+    ```bash
     ./gradlew bootRun
-```
-----
-## Adresy:
+    ```
 
-- Server: http://localhost:8090/ 
-- Client: http://localhost:9080/
+## URLs
+
+- **Server**: [http://localhost:8090/](http://localhost:8090/)
+- **Client**: [http://localhost:9080/](http://localhost:9080/)
